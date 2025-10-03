@@ -52,7 +52,7 @@ func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*pluginv1
 
 func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Capabilities, error) {
 	return &pluginv1.Capabilities{
-		Flows: []pluginv1.Flow{pluginv1.Flow_FLOW_REQUEST},
+		Flows: []pluginv1.Flow{pluginv1.FlowRequest},
 	}, nil
 }
 
@@ -115,7 +115,7 @@ func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*pluginv1
 
 func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Capabilities, error) {
 	return &pluginv1.Capabilities{
-		Flows: []pluginv1.Flow{pluginv1.Flow_FLOW_REQUEST},
+		Flows: []pluginv1.Flow{pluginv1.FlowRequest},
 	}, nil
 }
 
