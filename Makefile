@@ -1,5 +1,5 @@
 # Proto version to use from mozilla-ai/mcpd-proto repository.
-PROTO_VERSION := v0.0.2
+PROTO_VERSION := v0.0.3
 
 # Base URL for downloading proto files from GitHub.
 PROTO_BASE_URL := https://raw.githubusercontent.com/mozilla-ai/mcpd-proto/$(PROTO_VERSION)

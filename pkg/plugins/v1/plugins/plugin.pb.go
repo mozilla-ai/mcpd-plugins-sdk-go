@@ -287,13 +287,16 @@ func (x *HTTPRequest) GetRequestUri() string {
 
 // HTTPResponse represents an HTTP response from plugin processing.
 type HTTPResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	StatusCode    int32                  `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
-	Headers       map[string]string      `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Body          []byte                 `protobuf:"bytes,3,opt,name=body,proto3" json:"body,omitempty"`
-	Continue      bool                   `protobuf:"varint,4,opt,name=continue,proto3" json:"continue,omitempty"` // If true, continue to next plugin/handler; if false, short-circuit
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	StatusCode int32                  `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	Headers    map[string]string      `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Body       []byte                 `protobuf:"bytes,3,opt,name=body,proto3" json:"body,omitempty"`
+	Continue   bool                   `protobuf:"varint,4,opt,name=continue,proto3" json:"continue,omitempty"` // If true, continue to next plugin/handler; if false, short-circuit
+	// Optional modified request for plugins that want to transform the incoming request.
+	// When set, contains the modified version of the request that was processed.
+	ModifiedRequest *HTTPRequest `protobuf:"bytes,5,opt,name=modified_request,json=modifiedRequest,proto3" json:"modified_request,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *HTTPResponse) Reset() {
@@ -352,6 +355,13 @@ func (x *HTTPResponse) GetContinue() bool {
 		return x.Continue
 	}
 	return false
+}
+
+func (x *HTTPResponse) GetModifiedRequest() *HTTPRequest {
+	if x != nil {
+		return x.ModifiedRequest
+	}
+	return nil
 }
 
 // TelemetryConfig provides OpenTelemetry configuration.
@@ -503,13 +513,14 @@ const file_plugins_plugin_proto_rawDesc = "" +
 	"requestUri\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe9\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xba\x02\n" +
 	"\fHTTPResponse\x12\x1f\n" +
 	"\vstatus_code\x18\x01 \x01(\x05R\n" +
 	"statusCode\x12L\n" +
 	"\aheaders\x18\x02 \x03(\v22.mozilla.mcpd.plugins.v1.HTTPResponse.HeadersEntryR\aheaders\x12\x12\n" +
 	"\x04body\x18\x03 \x01(\fR\x04body\x12\x1a\n" +
-	"\bcontinue\x18\x04 \x01(\bR\bcontinue\x1a:\n" +
+	"\bcontinue\x18\x04 \x01(\bR\bcontinue\x12O\n" +
+	"\x10modified_request\x18\x05 \x01(\v2$.mozilla.mcpd.plugins.v1.HTTPRequestR\x0fmodifiedRequest\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x9e\x01\n" +
@@ -569,29 +580,30 @@ var file_plugins_plugin_proto_depIdxs = []int32{
 	0,  // 0: mozilla.mcpd.plugins.v1.Capabilities.flows:type_name -> mozilla.mcpd.plugins.v1.Flow
 	7,  // 1: mozilla.mcpd.plugins.v1.HTTPRequest.headers:type_name -> mozilla.mcpd.plugins.v1.HTTPRequest.HeadersEntry
 	8,  // 2: mozilla.mcpd.plugins.v1.HTTPResponse.headers:type_name -> mozilla.mcpd.plugins.v1.HTTPResponse.HeadersEntry
-	5,  // 3: mozilla.mcpd.plugins.v1.PluginConfig.telemetry:type_name -> mozilla.mcpd.plugins.v1.TelemetryConfig
-	9,  // 4: mozilla.mcpd.plugins.v1.PluginConfig.custom_config:type_name -> mozilla.mcpd.plugins.v1.PluginConfig.CustomConfigEntry
-	6,  // 5: mozilla.mcpd.plugins.v1.Plugin.Configure:input_type -> mozilla.mcpd.plugins.v1.PluginConfig
-	10, // 6: mozilla.mcpd.plugins.v1.Plugin.Stop:input_type -> google.protobuf.Empty
-	10, // 7: mozilla.mcpd.plugins.v1.Plugin.GetMetadata:input_type -> google.protobuf.Empty
-	10, // 8: mozilla.mcpd.plugins.v1.Plugin.GetCapabilities:input_type -> google.protobuf.Empty
-	10, // 9: mozilla.mcpd.plugins.v1.Plugin.CheckHealth:input_type -> google.protobuf.Empty
-	10, // 10: mozilla.mcpd.plugins.v1.Plugin.CheckReady:input_type -> google.protobuf.Empty
-	3,  // 11: mozilla.mcpd.plugins.v1.Plugin.HandleRequest:input_type -> mozilla.mcpd.plugins.v1.HTTPRequest
-	4,  // 12: mozilla.mcpd.plugins.v1.Plugin.HandleResponse:input_type -> mozilla.mcpd.plugins.v1.HTTPResponse
-	10, // 13: mozilla.mcpd.plugins.v1.Plugin.Configure:output_type -> google.protobuf.Empty
-	10, // 14: mozilla.mcpd.plugins.v1.Plugin.Stop:output_type -> google.protobuf.Empty
-	1,  // 15: mozilla.mcpd.plugins.v1.Plugin.GetMetadata:output_type -> mozilla.mcpd.plugins.v1.Metadata
-	2,  // 16: mozilla.mcpd.plugins.v1.Plugin.GetCapabilities:output_type -> mozilla.mcpd.plugins.v1.Capabilities
-	10, // 17: mozilla.mcpd.plugins.v1.Plugin.CheckHealth:output_type -> google.protobuf.Empty
-	10, // 18: mozilla.mcpd.plugins.v1.Plugin.CheckReady:output_type -> google.protobuf.Empty
-	4,  // 19: mozilla.mcpd.plugins.v1.Plugin.HandleRequest:output_type -> mozilla.mcpd.plugins.v1.HTTPResponse
-	4,  // 20: mozilla.mcpd.plugins.v1.Plugin.HandleResponse:output_type -> mozilla.mcpd.plugins.v1.HTTPResponse
-	13, // [13:21] is the sub-list for method output_type
-	5,  // [5:13] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	3,  // 3: mozilla.mcpd.plugins.v1.HTTPResponse.modified_request:type_name -> mozilla.mcpd.plugins.v1.HTTPRequest
+	5,  // 4: mozilla.mcpd.plugins.v1.PluginConfig.telemetry:type_name -> mozilla.mcpd.plugins.v1.TelemetryConfig
+	9,  // 5: mozilla.mcpd.plugins.v1.PluginConfig.custom_config:type_name -> mozilla.mcpd.plugins.v1.PluginConfig.CustomConfigEntry
+	6,  // 6: mozilla.mcpd.plugins.v1.Plugin.Configure:input_type -> mozilla.mcpd.plugins.v1.PluginConfig
+	10, // 7: mozilla.mcpd.plugins.v1.Plugin.Stop:input_type -> google.protobuf.Empty
+	10, // 8: mozilla.mcpd.plugins.v1.Plugin.GetMetadata:input_type -> google.protobuf.Empty
+	10, // 9: mozilla.mcpd.plugins.v1.Plugin.GetCapabilities:input_type -> google.protobuf.Empty
+	10, // 10: mozilla.mcpd.plugins.v1.Plugin.CheckHealth:input_type -> google.protobuf.Empty
+	10, // 11: mozilla.mcpd.plugins.v1.Plugin.CheckReady:input_type -> google.protobuf.Empty
+	3,  // 12: mozilla.mcpd.plugins.v1.Plugin.HandleRequest:input_type -> mozilla.mcpd.plugins.v1.HTTPRequest
+	4,  // 13: mozilla.mcpd.plugins.v1.Plugin.HandleResponse:input_type -> mozilla.mcpd.plugins.v1.HTTPResponse
+	10, // 14: mozilla.mcpd.plugins.v1.Plugin.Configure:output_type -> google.protobuf.Empty
+	10, // 15: mozilla.mcpd.plugins.v1.Plugin.Stop:output_type -> google.protobuf.Empty
+	1,  // 16: mozilla.mcpd.plugins.v1.Plugin.GetMetadata:output_type -> mozilla.mcpd.plugins.v1.Metadata
+	2,  // 17: mozilla.mcpd.plugins.v1.Plugin.GetCapabilities:output_type -> mozilla.mcpd.plugins.v1.Capabilities
+	10, // 18: mozilla.mcpd.plugins.v1.Plugin.CheckHealth:output_type -> google.protobuf.Empty
+	10, // 19: mozilla.mcpd.plugins.v1.Plugin.CheckReady:output_type -> google.protobuf.Empty
+	4,  // 20: mozilla.mcpd.plugins.v1.Plugin.HandleRequest:output_type -> mozilla.mcpd.plugins.v1.HTTPResponse
+	4,  // 21: mozilla.mcpd.plugins.v1.Plugin.HandleResponse:output_type -> mozilla.mcpd.plugins.v1.HTTPResponse
+	14, // [14:22] is the sub-list for method output_type
+	6,  // [6:14] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_plugins_plugin_proto_init() }
