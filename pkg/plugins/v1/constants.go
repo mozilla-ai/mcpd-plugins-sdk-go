@@ -1,4 +1,4 @@
-package v1
+package mcpdpluginsv1
 
 const (
 	// FlowRequest indicates the plugin handles incoming HTTP requests.
