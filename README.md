@@ -34,32 +34,32 @@ import (
 	"context"
 	"log"
 
-	pluginv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1/plugins"
+	"github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type MyPlugin struct {
-	pluginv1.BasePlugin // Provides sensible defaults for all methods.
+	mcpdpluginsv1.BasePlugin // Provides sensible defaults for all methods.
 }
 
-func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Metadata, error) {
-	return &pluginv1.Metadata{
+func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*mcpdpluginsv1.Metadata, error) {
+	return &mcpdpluginsv1.Metadata{
 		Name:        "my-plugin",
 		Version:     "1.0.0",
 		Description: "Example plugin that does something useful",
 	}, nil
 }
 
-func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Capabilities, error) {
-	return &pluginv1.Capabilities{
-		Flows: []pluginv1.Flow{pluginv1.FlowRequest},
+func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*mcpdpluginsv1.Capabilities, error) {
+	return &mcpdpluginsv1.Capabilities{
+		Flows: []mcpdpluginsv1.Flow{mcpdpluginsv1.FlowRequest},
 	}, nil
 }
 
-func (p *MyPlugin) HandleRequest(ctx context.Context, req *pluginv1.HTTPRequest) (*pluginv1.HTTPResponse, error) {
+func (p *MyPlugin) HandleRequest(ctx context.Context, req *mcpdpluginsv1.HTTPRequest) (*mcpdpluginsv1.HTTPResponse, error) {
 	// Custom request processing logic here.
 
-	return &pluginv1.HTTPResponse{
+	return &mcpdpluginsv1.HTTPResponse{
 		Continue:   true,
 		StatusCode: 0,
 		Headers:    req.Headers,
@@ -68,7 +68,7 @@ func (p *MyPlugin) HandleRequest(ctx context.Context, req *pluginv1.HTTPRequest)
 }
 
 func main() {
-	if err := pluginv1.Serve(&MyPlugin{}); err != nil {
+	if err := mcpdpluginsv1.Serve(&MyPlugin{}); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -96,26 +96,26 @@ import (
 	"net"
 	"os"
 
-	pluginv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1/plugins"
+	"github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type MyPlugin struct {
-	pluginv1.UnimplementedPluginServer
+	mcpdpluginsv1.UnimplementedPluginServer
 }
 
-func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Metadata, error) {
-	return &pluginv1.Metadata{
+func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*mcpdpluginsv1.Metadata, error) {
+	return &mcpdpluginsv1.Metadata{
 		Name:        "my-plugin",
 		Version:     "1.0.0",
 		Description: "Example plugin",
 	}, nil
 }
 
-func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Capabilities, error) {
-	return &pluginv1.Capabilities{
-		Flows: []pluginv1.Flow{pluginv1.FlowRequest},
+func (p *MyPlugin) GetCapabilities(ctx context.Context, _ *emptypb.Empty) (*mcpdpluginsv1.Capabilities, error) {
+	return &mcpdpluginsv1.Capabilities{
+		Flows: []mcpdpluginsv1.Flow{mcpdpluginsv1.FlowRequest},
 	}, nil
 }
 
@@ -127,7 +127,7 @@ func (p *MyPlugin) CheckReady(ctx context.Context, _ *emptypb.Empty) (*emptypb.E
 	return &emptypb.Empty{}, nil
 }
 
-func (p *MyPlugin) Configure(ctx context.Context, cfg *pluginv1.PluginConfig) (*emptypb.Empty, error) {
+func (p *MyPlugin) Configure(ctx context.Context, cfg *mcpdpluginsv1.PluginConfig) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }
 
@@ -135,16 +135,16 @@ func (p *MyPlugin) Stop(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, 
 	return &emptypb.Empty{}, nil
 }
 
-func (p *MyPlugin) HandleRequest(ctx context.Context, req *pluginv1.HTTPRequest) (*pluginv1.HTTPResponse, error) {
-	return &pluginv1.HTTPResponse{
+func (p *MyPlugin) HandleRequest(ctx context.Context, req *mcpdpluginsv1.HTTPRequest) (*mcpdpluginsv1.HTTPResponse, error) {
+	return &mcpdpluginsv1.HTTPResponse{
 		Continue:   true,
 		Headers:    req.Headers,
 		Body:       req.Body,
 	}, nil
 }
 
-func (p *MyPlugin) HandleResponse(ctx context.Context, resp *pluginv1.HTTPResponse) (*pluginv1.HTTPResponse, error) {
-	return &pluginv1.HTTPResponse{
+func (p *MyPlugin) HandleResponse(ctx context.Context, resp *mcpdpluginsv1.HTTPResponse) (*mcpdpluginsv1.HTTPResponse, error) {
+	return &mcpdpluginsv1.HTTPResponse{
 		Continue:   true,
 		StatusCode: resp.StatusCode,
 		Headers:    resp.Headers,
@@ -172,7 +172,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pluginv1.RegisterPluginServer(grpcServer, &MyPlugin{})
+	mcpdpluginsv1.RegisterPluginServer(grpcServer, &MyPlugin{})
 
 	log.Printf("Plugin server listening on %s %s", network, address)
 	if err := grpcServer.Serve(lis); err != nil {
@@ -181,23 +181,23 @@ func main() {
 }
 ```
 
-## Import Alias Convention
+## Import Path
 
-Following Kubernetes conventions (e.g., `corev1`, `appsv1`), this SDK uses **`pluginv1`** as the recommended import alias:
+The Go package name is `mcpdpluginsv1`, following Kubernetes-style versioned naming (e.g., `corev1`, `appsv1`):
 
 ```go
-import pluginv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1/plugins"
+import "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 ```
 
 ## Proto Versioning
 
 The SDK follows the versioning of [mcpd-proto](https://github.com/mozilla-ai/mcpd-proto):
 
-- **API Version**: `plugins/v1/` (in proto repo) maps to `pkg/plugins/v1/plugins/` (in SDK)
+- **API Version**: `plugins/v1/` (in proto repo) maps to `pkg/plugins/v1/` (in SDK)
 - **Release Version**: Proto repo tags like `v0.0.1`, `v0.0.2`, etc.
 - **SDK Version**: This repo's tags track SDK releases and may differ from proto versions
 
-Current proto version: **v0.0.2**
+Current proto version: **v0.1.0**
 
 ## Repository Structure
 
@@ -213,11 +213,11 @@ mcpd-plugins-sdk-go/
 └── pkg/
     └── plugins/
         └── v1/
-            └── plugins/
-                ├── base.go            # BasePlugin helper.
-                ├── server.go          # Serve() helper.
-                ├── plugin.pb.go       # Generated protobuf types.
-                └── plugin_grpc.pb.go  # Generated gRPC service.
+            ├── base.go            # BasePlugin helper.
+            ├── constants.go       # Flow constant aliases.
+            ├── server.go          # Serve() helper.
+            ├── plugin.pb.go       # Generated protobuf types.
+            └── plugin_grpc.pb.go  # Generated gRPC service.
 ```
 
 ## For SDK Maintainers

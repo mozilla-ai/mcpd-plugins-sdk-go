@@ -1,4 +1,4 @@
-package v1
+package mcpdpluginsv1
 
 import (
 	"context"
@@ -24,24 +24,24 @@ import (
 //	import (
 //	    "context"
 //
-//	    pluginv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1/plugins"
+//	    "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 //	    "google.golang.org/protobuf/types/known/emptypb"
 //	)
 //
 //	type MyPlugin struct {
-//	    pluginv1.BasePlugin
+//	    mcpdpluginsv1.BasePlugin
 //	}
 //
-//	func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*pluginv1.Metadata, error) {
-//	    return &pluginv1.Metadata{
+//	func (p *MyPlugin) GetMetadata(ctx context.Context, _ *emptypb.Empty) (*mcpdpluginsv1.Metadata, error) {
+//	    return &mcpdpluginsv1.Metadata{
 //	        Name: "my-plugin",
 //	        Version: "1.0.0",
 //	    }, nil
 //	}
 //
-//	func (p *MyPlugin) HandleRequest(ctx context.Context, req *pluginv1.HTTPRequest) (*pluginv1.HTTPResponse, error) {
+//	func (p *MyPlugin) HandleRequest(ctx context.Context, req *mcpdpluginsv1.HTTPRequest) (*mcpdpluginsv1.HTTPResponse, error) {
 //	    // Custom logic here.
-//	    return &pluginv1.HTTPResponse{Continue: true}, nil
+//	    return &mcpdpluginsv1.HTTPResponse{Continue: true}, nil
 //	}
 type BasePlugin struct {
 	UnimplementedPluginServer

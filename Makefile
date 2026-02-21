@@ -1,5 +1,5 @@
 # Proto version to use from mozilla-ai/mcpd-proto repository.
-PROTO_VERSION := v0.0.3
+PROTO_VERSION := v0.1.0
 
 # Base URL for downloading proto files from GitHub.
 PROTO_BASE_URL := https://raw.githubusercontent.com/mozilla-ai/mcpd-proto/$(PROTO_VERSION)
@@ -30,7 +30,7 @@ generate:
 	@echo "Generating Go code from proto files..."
 	@mkdir -p $(OUT_DIR)
 	@protoc \
-		--proto_path=$(TMP_DIR) \
+		--proto_path=$(PROTO_TMP_DIR) \
 		--go_out=$(OUT_DIR) \
 		--go_opt=paths=source_relative \
 		--go-grpc_out=$(OUT_DIR) \
@@ -42,7 +42,7 @@ generate:
 clean:
 	@echo "Cleaning generated files and temporary directories..."
 	@rm -rf $(TMP_DIR)
-	@find pkg/plugins/v1/plugins -name "*.pb.go" -delete 2>/dev/null || true
+	@find $(OUT_DIR) -name "*.pb.go" -delete 2>/dev/null || true
 	@echo "Clean complete."
 
 .PHONY: update-proto-version
