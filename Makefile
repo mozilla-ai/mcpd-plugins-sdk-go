@@ -42,7 +42,7 @@ generate:
 clean:
 	@echo "Cleaning generated files and temporary directories..."
 	@rm -rf $(TMP_DIR)
-	@find pkg/plugins/v1 -name "*.pb.go" -delete 2>/dev/null || true
+	@find $(OUT_DIR) -name "*.pb.go" -delete 2>/dev/null || true
 	@echo "Clean complete."
 
 .PHONY: update-proto-version

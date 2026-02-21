@@ -34,7 +34,7 @@ import (
 	"context"
 	"log"
 
-	mcpdpluginsv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
+	"github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -96,7 +96,7 @@ import (
 	"net"
 	"os"
 
-	mcpdpluginsv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
+	"github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
