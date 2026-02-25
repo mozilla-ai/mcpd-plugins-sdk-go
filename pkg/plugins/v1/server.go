@@ -1,4 +1,4 @@
-package v1
+package mcpdpluginsv1
 
 import (
 	"flag"
@@ -21,11 +21,11 @@ import (
 //	import (
 //	    "log"
 //
-//	    pluginv1 "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1/plugins"
+//	    "github.com/mozilla-ai/mcpd-plugins-sdk-go/pkg/plugins/v1"
 //	)
 //
 //	func main() {
-//	    if err := pluginv1.Serve(&MyPlugin{}); err != nil {
+//	    if err := mcpdpluginsv1.Serve(&MyPlugin{}); err != nil {
 //	        log.Fatal(err)
 //	    }
 //	}
