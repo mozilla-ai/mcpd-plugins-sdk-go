@@ -224,7 +224,7 @@ mcpd-plugins-sdk-go/
 
 ### Prerequisites
 
-- Go 1.25.1 or later
+- Go 1.27.1 or later
 - protoc (Protocol Buffer Compiler)
 - protoc-gen-go and protoc-gen-go-grpc plugins
 

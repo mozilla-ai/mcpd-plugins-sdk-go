@@ -1,6 +1,6 @@
 module github.com/mozilla-ai/mcpd-plugins-sdk-go
 
-go 1.25.1
+go 1.27.1
 
 require (
 	google.golang.org/grpc v1.83.2
